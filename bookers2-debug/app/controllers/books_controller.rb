@@ -1,4 +1,5 @@
 class BooksController < ApplicationController
+ before_action :colect_user, only: [:edit, :update]
 
   def show
     @book = Book.find(params[:id])
@@ -47,7 +48,12 @@ class BooksController < ApplicationController
 
 
   private
-
+  def colect_user
+    user = Book.find(params[:id]).user
+    if current_user.id != user.id
+      redirect_to books_path
+    end
+  end
   def book_params
     params.require(:book).permit(:title, :body)
   end
